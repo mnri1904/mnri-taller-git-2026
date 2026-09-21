@@ -31,6 +31,49 @@ class RomeroMarceloTest {
     }
 
     @Test
+    void exponeElIndiceDeLaApi() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.proyecto").value("MNRI Taller Git 2026"))
+                .andExpect(jsonPath("$.dominio").value("Minecraft"));
+    }
+
+    @Test
+    void respondeConElComportamientoPolimorficoDelCreeper() throws Exception {
+        mockMvc.perform(get("/api/minecraft/mobs/creeper")
+                .param("x", "3")
+                .param("z", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entidad.tipo").value("Creeper"))
+                .andExpect(jsonPath("$.entidad.posicionX").value(3))
+                .andExpect(jsonPath("$.entidad.posicionZ").value(2))
+                .andExpect(jsonPath("$.comportamiento")
+                        .value("El Creeper comenzo a cargar su explosion"));
+    }
+
+    @Test
+    void respondeConElComportamientoPolimorficoDelZombie() throws Exception {
+        mockMvc.perform(get("/api/minecraft/mobs/zombie")
+                .param("x", "1")
+                .param("z", "-2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entidad.tipo").value("Zombie"))
+                .andExpect(jsonPath("$.entidad.posicionX").value(1))
+                .andExpect(jsonPath("$.entidad.posicionZ").value(-2))
+                .andExpect(jsonPath("$.comportamiento")
+                        .value("El Zombie ataco cuerpo a cuerpo al jugador"));
+    }
+
+    @Test
+    void rechazaUnTipoDeMobDesconocido() throws Exception {
+        mockMvc.perform(get("/api/minecraft/mobs/dragon")
+                .param("x", "0")
+                .param("z", "0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Tipo de mob no soportado: dragon"));
+    }
+
+    @Test
     void recibirDanioNuncaDejaLaVidaNegativa() {
         Creeper creeper = new Creeper();
 
@@ -89,4 +132,5 @@ class RomeroMarceloTest {
         assertThat(creeper.estaViva()).isFalse();
         assertThat(creeper.estaCargado()).isFalse();
     }
+
 }
