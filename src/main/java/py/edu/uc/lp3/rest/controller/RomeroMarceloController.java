@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import py.edu.uc.lp3.domain.Creeper;
@@ -32,8 +33,14 @@ public class RomeroMarceloController {
     }
 
     @PostMapping("/danio")
-    public synchronized EstadoCreeper recibirDanio(@RequestBody Danio danio) {
-        creeper.recibirDanio(danio.cantidad());
+    public synchronized EstadoCreeper recibirDanio(
+            @RequestBody Danio danio,
+            @RequestParam(required = false) Integer proteccion) {
+        if (proteccion == null) {
+            creeper.recibirDanio(danio.cantidad());
+        } else {
+            creeper.recibirDanio(danio.cantidad(), proteccion);
+        }
         return estadoActual();
     }
 

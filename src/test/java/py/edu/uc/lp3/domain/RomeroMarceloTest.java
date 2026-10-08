@@ -3,15 +3,18 @@ package py.edu.uc.lp3.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import py.edu.uc.lp3.MnriTallerGit2026Application;
@@ -189,6 +192,65 @@ class RomeroMarceloTest {
 
         assertThat(creeper.estaViva()).isFalse();
         assertThat(creeper.estaCargado()).isFalse();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"8, 0, 12", "8, 3, 15", "8, 8, 20", "8, 10, 20", "30, 2, 0"})
+    void laProteccionReduceElDanioSinCurarNiDejarVidaNegativa(int danio, int proteccion, int vidaEsperada) {
+        for (Entidad entidad : new Entidad[] {new Creeper(), new Zombie()}) {
+            entidad.recibirDanio(danio, proteccion);
+            assertThat(entidad.estado().vida()).isEqualTo(vidaEsperada);
+        }
+    }
+
+    @Test
+    void rechazaArgumentosInvalidosDeLaSobrecargaSinCambiarElEstado() {
+        Creeper creeper = new Creeper();
+        assertThatThrownBy(() -> creeper.recibirDanio(0, 3))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> creeper.recibirDanio(8, -1))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("La proteccion no puede ser negativa");
+        assertThat(creeper.estado().vida()).isEqualTo(20);
+    }
+
+    @Test
+    void elDanioConProteccionMantieneLaReglaDeDesaparicion() {
+        Creeper creeper = new Creeper();
+        creeper.atacar();
+        creeper.recibirDanio(30, 5);
+        assertThat(creeper.estaViva()).isFalse();
+        assertThat(creeper.estaCargado()).isFalse();
+        assertThatThrownBy(() -> creeper.recibirDanio(1, 10))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    void permiteProbarAmbasFirmasDeDanioPorHttp() throws Exception {
+        mockMvc.perform(post("/api/minecraft/creeper/reiniciar"))
+                .andExpect(status().isOk());
+        try {
+            mockMvc.perform(post("/api/minecraft/creeper/danio")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"cantidad\":4}"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.entidad.vida").value(16));
+            mockMvc.perform(post("/api/minecraft/creeper/danio")
+                    .param("proteccion", "3")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"cantidad\":8}"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.entidad.vida").value(11));
+            mockMvc.perform(post("/api/minecraft/creeper/danio")
+                    .param("proteccion", "-1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"cantidad\":8}"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.error").value("La proteccion no puede ser negativa"));
+        } finally {
+            mockMvc.perform(post("/api/minecraft/creeper/reiniciar"))
+                    .andExpect(status().isOk());
+        }
     }
 
 }

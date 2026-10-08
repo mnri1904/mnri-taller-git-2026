@@ -53,6 +53,20 @@ public abstract class Entidad {
         }
     }
 
+    public final void recibirDanio(int cantidad, int proteccion) {
+        exigirActiva();
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("El danio debe ser positivo");
+        }
+        if (proteccion < 0) {
+            throw new IllegalArgumentException("La proteccion no puede ser negativa");
+        }
+        int danioEfectivo = Math.max(0, cantidad - proteccion);
+        if (danioEfectivo > 0) {
+            recibirDanio(danioEfectivo);
+        }
+    }
+
     public final void desaparecer() {
         vida = 0;
         alDesaparecer();
