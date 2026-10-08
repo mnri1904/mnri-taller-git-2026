@@ -1,4 +1,4 @@
-package py.edu.uc.lp3.minecraft.web;
+package py.edu.uc.lp3.rest.controller;
 
 import java.util.Locale;
 import java.util.Map;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import py.edu.uc.lp3.minecraft.Creeper;
-import py.edu.uc.lp3.minecraft.EstadoEntidad;
-import py.edu.uc.lp3.minecraft.Mob;
-import py.edu.uc.lp3.minecraft.Zombie;
+import py.edu.uc.lp3.domain.Creeper;
+import py.edu.uc.lp3.domain.EstadoEntidad;
+import py.edu.uc.lp3.domain.Mob;
+import py.edu.uc.lp3.domain.Zombie;
 
 @RestController
 @RequestMapping("/api/minecraft/mobs")

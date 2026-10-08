@@ -1,4 +1,4 @@
-package py.edu.uc.lp3.minecraft;
+package py.edu.uc.lp3.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import py.edu.uc.lp3.mnritallergit2026.MnriTallerGit2026Application;
+import py.edu.uc.lp3.MnriTallerGit2026Application;
 
 @SpringBootTest(classes = MnriTallerGit2026Application.class)
 @AutoConfigureMockMvc

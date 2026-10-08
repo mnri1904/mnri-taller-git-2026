@@ -1,9 +1,9 @@
-package py.edu.uc.lp3.mnritallergit2026;
+package py.edu.uc.lp3;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = "py.edu.uc.lp3")
+@SpringBootApplication
 public class MnriTallerGit2026Application {
 
 	public static void main(String[] args) {

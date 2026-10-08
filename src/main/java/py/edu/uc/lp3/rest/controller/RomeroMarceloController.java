@@ -1,4 +1,4 @@
-package py.edu.uc.lp3.minecraft.web;
+package py.edu.uc.lp3.rest.controller;
 
 import java.util.Map;
 
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import py.edu.uc.lp3.minecraft.Creeper;
-import py.edu.uc.lp3.minecraft.EstadoEntidad;
+import py.edu.uc.lp3.domain.Creeper;
+import py.edu.uc.lp3.domain.EstadoEntidad;
 
 @RestController
 @RequestMapping("/api/minecraft/creeper")
