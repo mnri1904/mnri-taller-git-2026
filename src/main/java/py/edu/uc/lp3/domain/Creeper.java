@@ -7,7 +7,11 @@ public final class Creeper extends Mob {
     private boolean cargado;
 
     public Creeper() {
-        super(VIDA_MAXIMA);
+        this(VIDA_MAXIMA, 0, 0);
+    }
+
+    public Creeper(int vidaInicial, int posicionX, int posicionZ) {
+        super(VIDA_MAXIMA, vidaInicial, posicionX, posicionZ);
     }
 
     @Override

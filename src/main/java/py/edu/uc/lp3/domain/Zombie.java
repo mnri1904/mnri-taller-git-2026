@@ -5,7 +5,11 @@ public final class Zombie extends Mob {
     private static final int VIDA_MAXIMA = 20;
 
     public Zombie() {
-        super(VIDA_MAXIMA);
+        this(VIDA_MAXIMA, 0, 0);
+    }
+
+    public Zombie(int vidaInicial, int posicionX, int posicionZ) {
+        super(VIDA_MAXIMA, vidaInicial, posicionX, posicionZ);
     }
 
     @Override

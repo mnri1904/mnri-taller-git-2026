@@ -8,11 +8,20 @@ public abstract class Entidad {
     private int posicionZ;
 
     protected Entidad(int vidaMaxima) {
+        this(vidaMaxima, vidaMaxima, 0, 0);
+    }
+
+    protected Entidad(int vidaMaxima, int vidaInicial, int posicionX, int posicionZ) {
         if (vidaMaxima <= 0) {
             throw new IllegalArgumentException("La vida maxima debe ser positiva");
         }
+        if (vidaInicial <= 0 || vidaInicial > vidaMaxima) {
+            throw new IllegalArgumentException("La vida inicial debe estar entre 1 y " + vidaMaxima);
+        }
         this.vidaMaxima = vidaMaxima;
-        this.vida = vidaMaxima;
+        this.vida = vidaInicial;
+        this.posicionX = posicionX;
+        this.posicionZ = posicionZ;
     }
 
     public abstract String tipo();

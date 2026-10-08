@@ -25,11 +25,9 @@ public class MobController {
     public RespuestaMob crear(
             @PathVariable String tipo,
             @RequestParam int x,
-            @RequestParam int z) {
-        Mob mob = crearMob(tipo);
-        if (x != 0 || z != 0) {
-            mob.mover(x, z);
-        }
+            @RequestParam int z,
+            @RequestParam(defaultValue = "20") int vida) {
+        Mob mob = crearMob(tipo, vida, x, z);
         return new RespuestaMob(mob.estado(), mob.atacar());
     }
 
@@ -39,10 +37,10 @@ public class MobController {
                 .body(Map.of("error", exception.getMessage()));
     }
 
-    private Mob crearMob(String tipo) {
+    private Mob crearMob(String tipo, int vida, int x, int z) {
         return switch (tipo.toLowerCase(Locale.ROOT)) {
-            case "creeper" -> new Creeper();
-            case "zombie" -> new Zombie();
+            case "creeper" -> new Creeper(vida, x, z);
+            case "zombie" -> new Zombie(vida, x, z);
             default -> throw new IllegalArgumentException("Tipo de mob no soportado: " + tipo);
         };
     }

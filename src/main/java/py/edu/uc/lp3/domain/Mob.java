@@ -8,6 +8,10 @@ public abstract class Mob extends Entidad {
         super(vidaMaxima);
     }
 
+    protected Mob(int vidaMaxima, int vidaInicial, int posicionX, int posicionZ) {
+        super(vidaMaxima, vidaInicial, posicionX, posicionZ);
+    }
+
     @Override
     public void mover(int desplazamientoX, int desplazamientoZ) {
         long distancia = Math.abs((long) desplazamientoX) + Math.abs((long) desplazamientoZ);

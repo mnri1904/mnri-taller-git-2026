@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +22,62 @@ class RomeroMarceloTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Test
+    void losConstructoresSimplesCreanMobsConVidaCompletaEnElOrigen() {
+        for (Mob mob : new Mob[] {new Creeper(), new Zombie()}) {
+            assertThat(mob.estado().vida()).isEqualTo(20);
+            assertThat(mob.estado().posicionX()).isZero();
+            assertThat(mob.estado().posicionZ()).isZero();
+            assertThat(mob.estaViva()).isTrue();
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 20})
+    void losConstructoresSobrecargadosAceptanLosLimitesDeVida(int vida) {
+        for (Mob mob : new Mob[] {new Creeper(vida, 100, -50), new Zombie(vida, 100, -50)}) {
+            assertThat(mob.estado().vida()).isEqualTo(vida);
+            assertThat(mob.estado().vidaMaxima()).isEqualTo(20);
+            assertThat(mob.estado().posicionX()).isEqualTo(100);
+            assertThat(mob.estado().posicionZ()).isEqualTo(-50);
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 0, 21})
+    void losConstructoresRechazanVidaInicialInvalida(int vida) {
+        assertThatThrownBy(() -> new Creeper(vida, 0, 0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("La vida inicial debe estar entre 1 y 20");
+        assertThatThrownBy(() -> new Zombie(vida, 0, 0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("La vida inicial debe estar entre 1 y 20");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"creeper", "zombie"})
+    void construyeConVidaYPosicionRecibidasPorUrl(String tipo) throws Exception {
+        mockMvc.perform(get("/api/minecraft/mobs/" + tipo)
+                .param("vida", "12")
+                .param("x", "100")
+                .param("z", "-50"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entidad.vida").value(12))
+                .andExpect(jsonPath("$.entidad.posicionX").value(100))
+                .andExpect(jsonPath("$.entidad.posicionZ").value(-50));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"creeper", "zombie"})
+    void informaPorHttpLaVidaRechazadaPorElDominio(String tipo) throws Exception {
+        mockMvc.perform(get("/api/minecraft/mobs/" + tipo)
+                .param("vida", "21")
+                .param("x", "0")
+                .param("z", "0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("La vida inicial debe estar entre 1 y 20"));
+    }
 
     @Test
     void exponeElCreeperPorLaApiRest() throws Exception {
