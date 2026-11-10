@@ -249,6 +249,20 @@ especificaciones de Classroom y las tres capturas enlazadas. Su hash se obtiene
 del historial, no se inventa dentro del mismo commit. La publicacion y el enlace
 final de Classroom se completan despues de confirmar el envio a GitHub.
 
+### 19. Publicacion personal del estudiante y cuarta captura
+
+El estudiante prefirio ejecutar el push personalmente y dejar evidencia. Ejecuto
+`git push origin mnri-poo-06` y compartio la salida exitosa
+`5c46c46..2eccb40`. Luego guardo `docs/evidencias/04-publicacion-github.png`.
+El agente leyo la captura, confirmo visualmente su contenido y agrego su enlace
+al registro de evidencias. Se completo en las especificaciones la URL exacta
+del commit publicado y se actualizo el estado del README.
+
+Esta cuarta captura se incorpora despues de la publicacion original, por lo
+que necesita un nuevo commit documental y otro push. El agente no ejecuto el
+push: lo hizo el estudiante. No se considera entregado en Classroom hasta que
+el estudiante lo envie alli.
+
 ## Alcance del registro
 
 El proyecto anterior tambien se desarrollo con asistencia de IA, incluyendo

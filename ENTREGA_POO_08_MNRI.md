@@ -5,7 +5,8 @@
 - Fecha del enunciado: 28 y 29 de octubre de 2026; revision del profesor del 3 de noviembre.
 - Dominio: Minecraft.
 - Proyecto: `mnri-taller-git-2026`.
-- Enlace exacto al commit: **PENDIENTE: completar con la URL del commit publicado**.
+- Commit de la solucion publicada (codigo, coleccion, documentacion y tres capturas):
+  https://github.com/mnri1904/mnri-taller-git-2026/commit/2eccb407d30bafbd0b8ba630c6fd398336aaaa06
 
 ## Objetivo aplicado al dominio
 
@@ -129,16 +130,19 @@ vida 4. GET y la tabla H2 confirmaron esas vidas; el Creeper quedo con vida 0.
 Se observaron los cinco codigos de error anteriores.
 
 El detalle se encuentra en [docs/EVIDENCIAS_POO_08.md](docs/EVIDENCIAS_POO_08.md).
-Ese registro transcribe resultados de las capturas e incluye tres imagenes:
-la tabla H2, la explosion y el error al repetirla, guardadas en `docs/evidencias/`.
+Ese registro transcribe resultados de las capturas e incluye cuatro imagenes:
+la tabla H2, la explosion, el error al repetirla y la publicacion en GitHub,
+guardadas en `docs/evidencias/`. La cuarta se incorpora en una actualizacion
+documental posterior al commit de solucion enlazado arriba.
 
 ### Pasos de publicacion
 
 - Los cambios se registran en commits separados segun la consigna, con mensajes
    que expliquen dependencias/propiedades, entidades, repositorio, controller,
    reglas y simulacion, excepciones y handlers, coleccion y documentacion.
-- Publicar los commits y reemplazar el pendiente de este documento por la URL
-  exacta: `https://github.com/<usuario>/<repositorio>/commit/<hash-completo>`.
+- El estudiante publico los ocho commits con `git push origin mnri-poo-06`;
+  Git confirmo el avance remoto `5c46c46..2eccb40`.
+- Registrar y publicar tambien esta actualizacion documental y su captura.
 - Subir estas especificaciones a Classroom con el enlace al commit final.
 - La importacion y el recorrido manual en Insomnia ya se realizaron; conservar
   las capturas como evidencia adicional si se adjuntan a Classroom.

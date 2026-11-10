@@ -233,9 +233,11 @@ persistencia en archivo despues de reiniciar. La importacion visual en Insomnia
 13.4.0 y el recorrido manual de CRUD, protocolo, simulacion y los cinco codigos
 de error ya se realizaron. Se confirmaron las filas en la consola H2.
 El [registro de evidencias](docs/EVIDENCIAS_POO_08.md) resume las capturas
-compartidas por el estudiante. Los cambios se registran en commits separados;
-quedan pendientes la publicacion, el enlace exacto al commit publicado y el
-envio a Classroom.
+compartidas por el estudiante. Los ocho commits fueron publicados por el
+estudiante en la rama `mnri-poo-06`. La solucion publicada esta en
+[este commit](https://github.com/mnri1904/mnri-taller-git-2026/commit/2eccb407d30bafbd0b8ba630c6fd398336aaaa06).
+El registro de publicacion y su cuarta captura son una actualizacion documental
+posterior que tambien debe registrarse y publicarse. Queda el envio a Classroom.
 
 ## Dos reglas de negocio: simulacion de explosiones
 

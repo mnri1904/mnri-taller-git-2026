@@ -107,3 +107,23 @@ manualmente las variables con Ctrl+E y filas tipo Text:
 Para repetir desde otra base, reemplazar los IDs luego de cada creacion.
 La coleccion versionada conserva valores iniciales de ejemplo, no estos IDs
 como requisito de ejecucion.
+
+## Publicacion realizada por el estudiante
+
+El estudiante ejecuto personalmente:
+
+```bash
+cd /home/mromero/mnri-taller-git-2026
+git push origin mnri-poo-06
+```
+
+La terminal confirmo el envio de los ocho commits a su rama, sin modificar
+`main`: `5c46c46..2eccb40  mnri-poo-06 -> mnri-poo-06`.
+
+Commit de la solucion publicada:
+https://github.com/mnri1904/mnri-taller-git-2026/commit/2eccb407d30bafbd0b8ba630c6fd398336aaaa06
+
+Esta captura y su registro se agregan despues de esa publicacion; requieren
+un nuevo commit documental y otro push para quedar tambien en GitHub.
+
+![Terminal del estudiante confirmando el push de los ocho commits a GitHub](evidencias/04-publicacion-github.png)
