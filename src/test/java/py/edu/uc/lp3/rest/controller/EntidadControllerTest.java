@@ -87,6 +87,8 @@ class EntidadControllerTest {
         mockMvc.perform(post(URL).contentType(MediaType.APPLICATION_JSON)
                         .content(solicitud(tipo, vida, 0, 0)))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value(tipo.equals("Dragon")
+                        ? "REGLA_MINECRAFT_INVALIDA" : "VIDA_INVALIDA"))
                 .andExpect(jsonPath("$.error").isString());
         assertThat(repository.count()).isZero();
     }
@@ -97,6 +99,7 @@ class EntidadControllerTest {
     void rechazaCamposObligatoriosAusentes(String cuerpo) throws Exception {
         mockMvc.perform(post(URL).contentType(MediaType.APPLICATION_JSON).content(cuerpo))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value("REGLA_MINECRAFT_INVALIDA"))
                 .andExpect(jsonPath("$.error").isString());
         assertThat(repository.count()).isZero();
     }
@@ -144,6 +147,7 @@ class EntidadControllerTest {
     void devuelve404ParaOperacionesSobreIdInexistente() throws Exception {
         mockMvc.perform(get(URL + "/999999"))
                 .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.codigo").value("ENTIDAD_NO_ENCONTRADA"))
                 .andExpect(jsonPath("$.error").value("No existe la entidad con id 999999"));
         mockMvc.perform(put(URL + "/999999").contentType(MediaType.APPLICATION_JSON)
                         .content(solicitud("Zombie", 10, 0, 0)))
@@ -182,6 +186,7 @@ class EntidadControllerTest {
 
         mockMvc.perform(post(URL + "/" + creeperId + "/explosion"))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value("ENTIDAD_DESAPARECIDA"))
                 .andExpect(jsonPath("$.error").value("La entidad ya desaparecio"));
         assertThat(repository.findById(zombieId).orElseThrow().estado().vida()).isEqualTo(11);
     }
@@ -191,6 +196,7 @@ class EntidadControllerTest {
         long zombieId = crearEntidad("Zombie", 20, 0, 0);
         mockMvc.perform(post(URL + "/" + zombieId + "/explosion"))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value("EXPLOSION_INVALIDA"))
                 .andExpect(jsonPath("$.error").value("Solo un Creeper puede provocar una explosion"));
         mockMvc.perform(post(URL + "/999999/explosion"))
                 .andExpect(status().isNotFound());

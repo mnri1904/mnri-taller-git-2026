@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,12 +67,6 @@ public class EntidadController {
     @PostMapping("/{id}/explosion")
     public ResultadoExplosion explotar(@PathVariable Long id) {
         return service.explotar(id);
-    }
-
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<Map<String, String>> manejarNoEncontrada(ResponseStatusException exception) {
-        return ResponseEntity.status(exception.getStatusCode())
-                .body(Map.of("error", exception.getReason()));
     }
 
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})

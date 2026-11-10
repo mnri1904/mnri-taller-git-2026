@@ -3,6 +3,7 @@ package py.edu.uc.lp3.domain;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import py.edu.uc.lp3.domain.exception.EntidadDesaparecidaException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -49,7 +50,7 @@ class ExplosionTest {
         Zombie zombie = new Zombie();
 
         assertThatThrownBy(() -> creeper.detonarSobre(List.of(zombie)))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(EntidadDesaparecidaException.class);
         assertThat(zombie.estado().vida()).isEqualTo(20);
     }
 

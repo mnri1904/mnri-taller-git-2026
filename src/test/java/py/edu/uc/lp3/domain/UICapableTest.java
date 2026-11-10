@@ -1,6 +1,7 @@
 package py.edu.uc.lp3.domain;
 
 import org.junit.jupiter.api.Test;
+import py.edu.uc.lp3.domain.exception.EntidadDesaparecidaException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -36,7 +37,7 @@ class UICapableTest {
         creeper.atacar();
         assertNotEquals(reposo, dibujable.sonido());
         creeper.explotar();
-        assertThrows(IllegalStateException.class, dibujable::sonido);
+        assertThrows(EntidadDesaparecidaException.class, dibujable::sonido);
     }
 
     @Test
@@ -46,7 +47,7 @@ class UICapableTest {
             UICapable dibujable = entidad;
             assertEquals(((Sonoro) entidad).emitirSonido(), dibujable.sonido());
             entidad.desaparecer();
-            assertThrows(IllegalStateException.class, dibujable::sonido);
+            assertThrows(EntidadDesaparecidaException.class, dibujable::sonido);
         }
     }
 }

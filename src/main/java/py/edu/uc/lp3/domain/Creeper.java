@@ -3,6 +3,8 @@ package py.edu.uc.lp3.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import py.edu.uc.lp3.domain.exception.ExplosionInvalidaException;
+
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -38,7 +40,7 @@ public class Creeper extends Mob {
     public String explotar() {
         exigirActiva();
         if (!cargado) {
-            throw new IllegalStateException("El Creeper debe cargar antes de explotar");
+            throw new ExplosionInvalidaException("El Creeper debe cargar antes de explotar");
         }
         desaparecer();
         return "El Creeper exploto y desaparecio";

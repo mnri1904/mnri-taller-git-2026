@@ -18,6 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import py.edu.uc.lp3.MnriTallerGit2026Application;
+import py.edu.uc.lp3.domain.exception.EntidadDesaparecidaException;
+import py.edu.uc.lp3.domain.exception.ExplosionInvalidaException;
+import py.edu.uc.lp3.domain.exception.VidaInvalidaException;
 
 @SpringBootTest(classes = MnriTallerGit2026Application.class)
 @AutoConfigureMockMvc
@@ -51,10 +54,10 @@ class RomeroMarceloTest {
     @ValueSource(ints = {-1, 0, 21})
     void losConstructoresRechazanVidaInicialInvalida(int vida) {
         assertThatThrownBy(() -> new Creeper(vida, 0, 0))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(VidaInvalidaException.class)
                 .hasMessage("La vida inicial debe estar entre 1 y 20");
         assertThatThrownBy(() -> new Zombie(vida, 0, 0))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(VidaInvalidaException.class)
                 .hasMessage("La vida inicial debe estar entre 1 y 20");
     }
 
@@ -172,7 +175,7 @@ class RomeroMarceloTest {
         Creeper creeper = new Creeper();
 
         assertThatThrownBy(creeper::explotar)
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(ExplosionInvalidaException.class)
                 .hasMessage("El Creeper debe cargar antes de explotar");
 
         creeper.atacar();
@@ -222,7 +225,7 @@ class RomeroMarceloTest {
         assertThat(creeper.estaViva()).isFalse();
         assertThat(creeper.estaCargado()).isFalse();
         assertThatThrownBy(() -> creeper.recibirDanio(1, 10))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(EntidadDesaparecidaException.class);
     }
 
     @Test

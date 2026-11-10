@@ -2,6 +2,9 @@ package py.edu.uc.lp3.domain;
 
 import java.util.Locale;
 
+import py.edu.uc.lp3.domain.exception.EntidadDesaparecidaException;
+import py.edu.uc.lp3.domain.exception.VidaInvalidaException;
+
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,10 +40,10 @@ public abstract class Entidad implements UICapable {
 
     protected Entidad(int vidaMaxima, int vidaInicial, int posicionX, int posicionZ) {
         if (vidaMaxima <= 0) {
-            throw new IllegalArgumentException("La vida maxima debe ser positiva");
+            throw new VidaInvalidaException("La vida maxima debe ser positiva");
         }
         if (vidaInicial <= 0 || vidaInicial > vidaMaxima) {
-            throw new IllegalArgumentException("La vida inicial debe estar entre 1 y " + vidaMaxima);
+            throw new VidaInvalidaException("La vida inicial debe estar entre 1 y " + vidaMaxima);
         }
         this.vidaMaxima = vidaMaxima;
         this.vida = vidaInicial;
@@ -56,7 +59,7 @@ public abstract class Entidad implements UICapable {
 
     public final void actualizarEstado(int vida, int posicionX, int posicionZ) {
         if (vida <= 0 || vida > vidaMaxima) {
-            throw new IllegalArgumentException("La vida debe estar entre 1 y " + vidaMaxima);
+            throw new VidaInvalidaException("La vida debe estar entre 1 y " + vidaMaxima);
         }
         this.vida = vida;
         this.posicionX = posicionX;
@@ -129,7 +132,7 @@ public abstract class Entidad implements UICapable {
 
     protected final void exigirActiva() {
         if (!estaViva()) {
-            throw new IllegalStateException("La entidad ya desaparecio");
+            throw new EntidadDesaparecidaException();
         }
     }
 
