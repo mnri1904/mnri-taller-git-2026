@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import py.edu.uc.lp3.domain.Entidad;
+import py.edu.uc.lp3.domain.ResultadoExplosion;
 import py.edu.uc.lp3.service.EntidadService;
 
 @RestController
@@ -62,6 +63,11 @@ public class EntidadController {
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/explosion")
+    public ResultadoExplosion explotar(@PathVariable Long id) {
+        return service.explotar(id);
     }
 
     @ExceptionHandler(ResponseStatusException.class)

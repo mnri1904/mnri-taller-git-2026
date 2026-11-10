@@ -151,6 +151,59 @@ class EntidadControllerTest {
         mockMvc.perform(delete(URL + "/999999")).andExpect(status().isNotFound());
     }
 
+    @Test
+    void explosionRestGuardaElEstadoDeLasTresClasesYRechazaRepeticion() throws Exception {
+        long creeperId = crearEntidad("Creeper", 20, 0, 0);
+        long zombieId = crearEntidad("Zombie", 20, 1, 0);
+        long cerdoId = crearEntidad("Cerdo", 5, 2, 0);
+        long lejanoId = crearEntidad("Zombie", 20, 4, 0);
+
+        mockMvc.perform(post(URL + "/" + creeperId + "/explosion"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.creeperId").value(creeperId))
+                .andExpect(jsonPath("$.radio").value(3))
+                .andExpect(jsonPath("$.creeper.vida").value(0))
+                .andExpect(jsonPath("$.afectados.length()").value(2))
+                .andExpect(jsonPath("$.afectados[?(@.tipo == 'Zombie')].danioAplicado").value(9))
+                .andExpect(jsonPath("$.afectados[?(@.tipo == 'Cerdo')].danioAplicado").value(5));
+
+        mockMvc.perform(get(URL + "/" + creeperId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.vida").value(0))
+                .andExpect(jsonPath("$.viva").value(false));
+        mockMvc.perform(get(URL + "/" + zombieId))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.vida").value(11));
+        mockMvc.perform(get(URL + "/" + cerdoId))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.vida").value(0));
+        mockMvc.perform(get(URL + "/" + lejanoId))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.vida").value(20));
+        mockMvc.perform(get(URL + "/sonidos"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(2));
+
+        mockMvc.perform(post(URL + "/" + creeperId + "/explosion"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("La entidad ya desaparecio"));
+        assertThat(repository.findById(zombieId).orElseThrow().estado().vida()).isEqualTo(11);
+    }
+
+    @Test
+    void explosionRechazaOtroTipoYUnIdInexistente() throws Exception {
+        long zombieId = crearEntidad("Zombie", 20, 0, 0);
+        mockMvc.perform(post(URL + "/" + zombieId + "/explosion"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Solo un Creeper puede provocar una explosion"));
+        mockMvc.perform(post(URL + "/999999/explosion"))
+                .andExpect(status().isNotFound());
+        assertThat(repository.findById(zombieId).orElseThrow().estado().vida()).isEqualTo(20);
+    }
+
+    private long crearEntidad(String tipo, int vida, int x, int z) throws Exception {
+        var resultado = mockMvc.perform(post(URL).contentType(MediaType.APPLICATION_JSON)
+                        .content(solicitud(tipo, vida, x, z)))
+                .andExpect(status().isCreated()).andReturn();
+        return objectMapper.readTree(resultado.getResponse().getContentAsString()).get("id").asLong();
+    }
+
     private String solicitud(String tipo, int vida, int x, int z) {
         return """
                 {"tipo":"%s","vida":%d,"posicionX":%d,"posicionZ":%d}

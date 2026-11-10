@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import py.edu.uc.lp3.domain.Cerdo;
 import py.edu.uc.lp3.domain.Creeper;
 import py.edu.uc.lp3.domain.Entidad;
+import py.edu.uc.lp3.domain.ResultadoExplosion;
 import py.edu.uc.lp3.domain.Sonoro;
 import py.edu.uc.lp3.domain.Zombie;
 import py.edu.uc.lp3.repository.EntidadRepository;
@@ -70,6 +71,16 @@ public class EntidadService {
     @Transactional
     public void eliminar(Long id) {
         repository.delete(buscar(id));
+    }
+
+    @Transactional
+    public ResultadoExplosion explotar(Long id) {
+        Entidad entidad = buscar(id);
+        if (!(entidad instanceof Creeper creeper)) {
+            throw new IllegalArgumentException("Solo un Creeper puede provocar una explosion");
+        }
+        // Las entidades estan administradas por JPA; sus cambios se guardan al confirmar la transaccion.
+        return creeper.detonarSobre(repository.findByVidaGreaterThan(0));
     }
 
     private void validarCampos(String tipo, Integer vida, Integer posicionX, Integer posicionZ) {
