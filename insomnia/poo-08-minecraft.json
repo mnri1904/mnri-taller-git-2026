@@ -1,0 +1,323 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-10-28T00:00:00.000Z",
+  "__export_source": "mnri-taller-git-2026",
+  "resources": [
+    {
+      "_id": "wrk_mnri_poo08",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "MNRI POO-08 — Minecraft CRUD H2",
+      "description": "Ejecutar en orden. Pedido 02: copiar ID a entidad_id. Pedido 12: copiar ID a creeper_id. Pedido 13: copiar ID a zombie_id. Para verificar reinicio, hacerlo antes del DELETE. Errores: 06 VIDA_INVALIDA, 09 ENTIDAD_NO_ENCONTRADA, 17 ENTIDAD_DESAPARECIDA, 19 EXPLOSION_INVALIDA y 20 REGLA_MINECRAFT_INVALIDA.",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_mnri_poo08",
+      "_type": "environment",
+      "parentId": "wrk_mnri_poo08",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:8080",
+        "entidad_id": 1,
+        "creeper_id": 1,
+        "zombie_id": 1,
+        "id_inexistente": "9223372036854775807"
+      },
+      "dataPropertyOrder": null,
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 0
+    },
+    {
+      "_id": "req_mnri_01_vivo",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "01 — GET servicio vivo (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_mnri_02_crear_zombie",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "02 — POST Zombie (201; copiar id al entorno)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/minecraft/entidades",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tipo\": \"Zombie\",\n  \"vida\": 20,\n  \"posicionX\": 0,\n  \"posicionZ\": 0\n}"
+      },
+      "parameters": [],
+      "headers": [{"name": "Content-Type", "value": "application/json"}],
+      "authentication": {},
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_mnri_03_listar",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "03 — GET colección persistida (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/minecraft/entidades",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_mnri_04_buscar",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "04 — GET por id (200; repetir tras PUT y reinicio)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/minecraft/entidades/{{ _.entidad_id }}",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 4
+    },
+    {
+      "_id": "req_mnri_05_actualizar",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "05 — PUT Zombie (200; vida 15, posición 4/-2)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/api/minecraft/entidades/{{ _.entidad_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tipo\": \"Zombie\",\n  \"vida\": 15,\n  \"posicionX\": 4,\n  \"posicionZ\": -2\n}"
+      },
+      "parameters": [],
+      "headers": [{"name": "Content-Type", "value": "application/json"}],
+      "authentication": {},
+      "metaSortKey": 5
+    },
+    {
+      "_id": "req_mnri_06_invalido",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "06 — Error VIDA_INVALIDA (400; Cerdo vida 11)",
+      "description": "Esperado: HTTP 400 y codigo VIDA_INVALIDA. Repetir el pedido 03 antes y despues: el POST rechazado no debe agregar una fila.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/minecraft/entidades",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tipo\": \"Cerdo\",\n  \"vida\": 11,\n  \"posicionX\": 0,\n  \"posicionZ\": 0\n}"
+      },
+      "parameters": [],
+      "headers": [{"name": "Content-Type", "value": "application/json"}],
+      "authentication": {},
+      "metaSortKey": 6
+    },
+    {
+      "_id": "req_mnri_07_crear_cerdo",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "07 — POST Cerdo (201; segunda familia Sonoro)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/minecraft/entidades",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tipo\": \"Cerdo\",\n  \"vida\": 10,\n  \"posicionX\": 2,\n  \"posicionZ\": 3\n}"
+      },
+      "parameters": [],
+      "headers": [{"name": "Content-Type", "value": "application/json"}],
+      "authentication": {},
+      "metaSortKey": 7
+    },
+    {
+      "_id": "req_mnri_08_sonidos",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "08 — GET protocolo Sonoro persistido (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/minecraft/entidades/sonidos",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 8
+    },
+    {
+      "_id": "req_mnri_09_inexistente",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "09 — Error ENTIDAD_NO_ENCONTRADA (404)",
+      "description": "Esperado: HTTP 404 y codigo ENTIDAD_NO_ENCONTRADA. El ID se guarda como texto para evitar perdida de precision numerica en el cliente.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/minecraft/entidades/{{ _.id_inexistente }}",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 9
+    },
+    {
+      "_id": "req_mnri_10_eliminar",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "10 — DELETE Zombie (204)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/api/minecraft/entidades/{{ _.entidad_id }}",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 10
+    },
+    {
+      "_id": "req_mnri_11_confirmar_borrado",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "11 — GET tras DELETE (404)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/minecraft/entidades/{{ _.entidad_id }}",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 11
+    },
+    {
+      "_id": "req_mnri_12_crear_creeper",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "12 — POST Creeper (201; copiar id a creeper_id)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/minecraft/entidades",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tipo\": \"Creeper\",\n  \"vida\": 20,\n  \"posicionX\": 5,\n  \"posicionZ\": 5\n}"
+      },
+      "parameters": [],
+      "headers": [{"name": "Content-Type", "value": "application/json"}],
+      "authentication": {},
+      "metaSortKey": 12
+    },
+    {
+      "_id": "req_mnri_13_zombie_explosion",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "13 — POST Zombie cercano (201; copiar id a zombie_id)",
+      "description": "Copiar el ID de respuesta a zombie_id del entorno. Este Zombie recibe daño en el pedido 15 y permite probar EXPLOSION_INVALIDA en el 19.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/minecraft/entidades",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tipo\": \"Zombie\",\n  \"vida\": 20,\n  \"posicionX\": 6,\n  \"posicionZ\": 5\n}"
+      },
+      "parameters": [],
+      "headers": [{"name": "Content-Type", "value": "application/json"}],
+      "authentication": {},
+      "metaSortKey": 13
+    },
+    {
+      "_id": "req_mnri_14_cerdo_explosion",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "14 — POST Cerdo a 2 bloques del Creeper (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/minecraft/entidades",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tipo\": \"Cerdo\",\n  \"vida\": 10,\n  \"posicionX\": 7,\n  \"posicionZ\": 5\n}"
+      },
+      "parameters": [],
+      "headers": [{"name": "Content-Type", "value": "application/json"}],
+      "authentication": {},
+      "metaSortKey": 14
+    },
+    {
+      "_id": "req_mnri_15_explosion",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "15 — POST explosión (200; Zombie 11, Cerdo 4)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/minecraft/entidades/{{ _.creeper_id }}/explosion",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 15
+    },
+    {
+      "_id": "req_mnri_16_creeper_explotado",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "16 — GET Creeper tras explosión (200; vida 0)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/minecraft/entidades/{{ _.creeper_id }}",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 16
+    },
+    {
+      "_id": "req_mnri_17_repetir_explosion",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "17 — Error ENTIDAD_DESAPARECIDA (400)",
+      "description": "Ejecutar despues del pedido 15. Esperado: HTTP 400 y codigo ENTIDAD_DESAPARECIDA. El Creeper no vuelve a dañar los objetivos.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/minecraft/entidades/{{ _.creeper_id }}/explosion",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 17
+    },
+    {
+      "_id": "req_mnri_18_estado_explosion",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "18 — GET colección después de explosión (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/minecraft/entidades",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 18
+    },
+    {
+      "_id": "req_mnri_19_explosion_invalida",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "19 — Error EXPLOSION_INVALIDA (400; Zombie)",
+      "description": "Usar zombie_id copiado en el pedido 13, no el ID eliminado del pedido 02. Esperado: HTTP 400, codigo EXPLOSION_INVALIDA y mensaje Solo un Creeper puede provocar una explosion.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/minecraft/entidades/{{ _.zombie_id }}/explosion",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 19
+    },
+    {
+      "_id": "req_mnri_20_datos_incompletos",
+      "_type": "request",
+      "parentId": "wrk_mnri_poo08",
+      "name": "20 — Error REGLA_MINECRAFT_INVALIDA (400; sin tipo)",
+      "description": "Esperado: HTTP 400, codigo REGLA_MINECRAFT_INVALIDA y mensaje El tipo es obligatorio. No crea una entidad.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/minecraft/entidades",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{}"
+      },
+      "parameters": [],
+      "headers": [{"name": "Content-Type", "value": "application/json"}],
+      "authentication": {},
+      "metaSortKey": 20
+    }
+  ]
+}
