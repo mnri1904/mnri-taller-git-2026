@@ -1,6 +1,11 @@
 package py.edu.uc.lp3.domain;
 
-public final class Zombie extends Mob {
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("Zombie")
+public class Zombie extends Mob implements Sonoro {
 
     private static final int VIDA_MAXIMA = 20;
 
@@ -21,5 +26,21 @@ public final class Zombie extends Mob {
     public String atacar() {
         exigirActiva();
         return "El Zombie ataco cuerpo a cuerpo al jugador";
+    }
+
+    @Override
+    public String emitirSonido() {
+        exigirActiva();
+        return "Grrr: el zombie gime buscando un objetivo.";
+    }
+
+    @Override
+    public String sonido() {
+        return emitirSonido();
+    }
+
+    @Override
+    public double velocidad() {
+        return 0.23;
     }
 }

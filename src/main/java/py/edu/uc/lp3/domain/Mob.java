@@ -1,8 +1,14 @@
 package py.edu.uc.lp3.domain;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public abstract class Mob extends Entidad {
 
     private static final int DESPLAZAMIENTO_MAXIMO = 8;
+
+    protected Mob() {
+    }
 
     protected Mob(int vidaMaxima) {
         super(vidaMaxima);

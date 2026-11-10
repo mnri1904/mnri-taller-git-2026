@@ -1,6 +1,11 @@
 package py.edu.uc.lp3.domain;
 
-public final class Creeper extends Mob {
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("Creeper")
+public class Creeper extends Mob {
 
     private static final int VIDA_MAXIMA = 20;
 
@@ -37,6 +42,17 @@ public final class Creeper extends Mob {
 
     public boolean estaCargado() {
         return cargado;
+    }
+
+    @Override
+    public String sonido() {
+        exigirActiva();
+        return cargado ? "Ssssss: el Creeper esta cargando su explosion." : "El Creeper esta en silencio.";
+    }
+
+    @Override
+    public double velocidad() {
+        return 0.25;
     }
 
     @Override
