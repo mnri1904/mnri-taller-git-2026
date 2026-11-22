@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -13,7 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UIController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class UIControllerTest {
 
     @Autowired
@@ -21,7 +23,7 @@ class UIControllerTest {
 
     @ParameterizedTest
     @CsvSource({
-        "creeper, 0.25, El Creeper esta en silencio.",
+        "creeper, 0.25, El Creeper está en silencio.",
         "zombie, 0.23, Grrr: el zombie gime buscando un objetivo.",
         "cerdo, 0.25, 'Oink, oink: el cerdo gruñe tranquilamente.'"
     })

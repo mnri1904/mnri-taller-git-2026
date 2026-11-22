@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("Cerdo")
 public class Cerdo extends Animal implements Sonoro {
 
-    private static final int VIDA_MAXIMA = 10;
+    public static final int VIDA_MAXIMA = 10;
 
     public Cerdo() {
         this(VIDA_MAXIMA, 0, 0);
@@ -24,7 +24,6 @@ public class Cerdo extends Animal implements Sonoro {
 
     @Override
     public String emitirSonido() {
-        exigirActiva();
         return "Oink, oink: el cerdo gruñe tranquilamente.";
     }
 

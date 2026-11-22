@@ -1,4 +1,4 @@
-# Instrucciones de ejecucion
+# Instrucciones de ejecución
 
 Requisitos: JDK 21.
 
@@ -8,9 +8,9 @@ Requisitos: JDK 21.
 
 La API escucha en el puerto `8080`.
 
-## Verificacion
+## Verificación
 
-Ejecutar las pruebas automatizadas antes de iniciar la aplicacion:
+Ejecutar las pruebas automatizadas antes de iniciar la aplicación:
 
 ```bash
 ./mvnw test
@@ -31,7 +31,7 @@ con herencia JPA `SINGLE_TABLE` y una columna discriminadora `tipo`.
 
 Base de la API: `http://localhost:8080/api/minecraft/entidades`.
 
-| Metodo | Ruta | Resultado |
+| Método | Ruta | Resultado |
 | --- | --- | --- |
 | POST | `/api/minecraft/entidades` | Crea: `201 Created`, JSON y cabecera `Location` |
 | GET | `/api/minecraft/entidades` | Lista: `200 OK` y arreglo JSON |
@@ -68,23 +68,24 @@ curl -i -X DELETE http://localhost:8080/api/minecraft/entidades/1
 ### Validaciones
 
 - `tipo`, `vida`, `posicionX` y `posicionZ` son obligatorios en POST y PUT.
-- Tipos permitidos: `Zombie`, `Creeper` y `Cerdo` (sin distinguir mayusculas).
+- Tipos permitidos: `Zombie`, `Creeper` y `Cerdo` (sin distinguir mayúsculas).
 - Vida entre 1 y 20 para Zombie/Creeper; entre 1 y 10 para Cerdo.
 - El tipo de una entidad existente no puede cambiarse.
-- Las validaciones responden `400 Bad Request` con `{"error":"mensaje"}`.
+- Si la entidad ya desapareció, el PUT devuelve `400 / ENTIDAD_DESAPARECIDA` sin cambiar la fila.
+- Los rechazos de reglas responden `400 Bad Request` con los campos `codigo` y `error`.
 - Consultar, actualizar o eliminar un ID inexistente responde `404 Not Found`.
 
 ### Base H2
 
 Los datos se conservan entre reinicios en `./data/minecraft.mv.db`, relativo al
-directorio desde el que se inicia la aplicacion. Hibernate actualiza el esquema
+directorio desde el que se inicia la aplicación. Hibernate actualiza el esquema
 con `spring.jpa.hibernate.ddl-auto=update`.
 
 Consola: <http://localhost:8080/h2-console>. Usar URL JDBC
-`jdbc:h2:file:./data/minecraft`, usuario `sa` y contraseña vacia.
+`jdbc:h2:file:./data/minecraft`, usuario `sa` y contraseña vacía.
 
 Las pruebas usan una base H2 en memoria independiente y verifican el CRUD,
-la reconstruccion de los tres subtipos desde la base, validaciones y errores 404.
+la reconstrucción de los tres subtipos desde la base, validaciones y errores 404.
 
 ## Insomnia (POO-08)
 
@@ -94,13 +95,13 @@ En Scratch Pad 13.4.0, si no se cargan, presionar Ctrl+E y agregar esas variable
 como Text: URL `http://localhost:8080`, ID inexistente `9223372036854775807`
 y los IDs que devuelvan los POST. Ejecutar los pedidos en
 orden; tras crear el Zombie, copiar el ID recibido a `entidad_id`. Repetir GET
-despues de PUT, despues del POST invalido y despues de reiniciar el servicio.
+después de PUT, después del POST inválido y después de reiniciar el servicio.
 Crear el Cerdo antes de consultar sonidos. Borrar el Zombie al terminar y
-confirmar el 404 posterior. El recorrido detallado esta en el README.
+confirmar el 404 posterior. El recorrido detallado está en el README.
 
-## Simular una explosion
+## Simular una explosión
 
-Reiniciar el servicio si estaba ejecutandose antes de incorporar el endpoint.
+Reiniciar el servicio si estaba ejecutándose antes de incorporar el endpoint.
 En Insomnia, el pedido 12 crea un Creeper en (5,5): copiar su ID a `creeper_id`.
 Los pedidos 13 y 14 crean Zombie y Cerdo en (6,5) y (7,5). El 15 ejecuta:
 
@@ -111,11 +112,11 @@ curl -X POST http://localhost:8080/api/minecraft/entidades/ID_CREEPER/explosion
 Reemplazar `ID_CREEPER` por el ID recibido. Responde `200`: el Creeper queda
 con vida 0, el Zombie con 11 y el Cerdo con 4. El radio es 3 bloques y el daño
 disminuye con la distancia. Los pedidos 16–18 consultan los cambios y verifican
-que repetir la explosion devuelve `400`. Todo el estado queda guardado en H2.
+que repetir la explosión devuelve `400`. Todo el estado queda guardado en H2.
 
 El pedido 19 intenta detonar al Zombie (`zombie_id` copiado del pedido 13):
-400/EXPLOSION_INVALIDA. El pedido 20 envia `{}`: 400/REGLA_MINECRAFT_INVALIDA.
-El caso de vida invalida esta en el 06 y el de ID inexistente en el 09.
+400/EXPLOSION_INVALIDA. El pedido 20 envía `{}`: 400/REGLA_MINECRAFT_INVALIDA.
+El caso de vida inválida está en el 06 y el de ID inexistente en el 09.
 
-El recorrido manual ya se verifico en Insomnia y H2. Ver
+El recorrido manual ya se verificó en Insomnia y H2. Ver
 `docs/EVIDENCIAS_POO_08.md` para los resultados observados en las capturas.

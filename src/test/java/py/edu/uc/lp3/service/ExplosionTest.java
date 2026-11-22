@@ -1,14 +1,20 @@
-package py.edu.uc.lp3.domain;
+package py.edu.uc.lp3.service;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import py.edu.uc.lp3.domain.Cerdo;
+import py.edu.uc.lp3.domain.Creeper;
+import py.edu.uc.lp3.domain.Zombie;
+import py.edu.uc.lp3.repository.EntidadRepository;
 import py.edu.uc.lp3.domain.exception.EntidadDesaparecidaException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 
 class ExplosionTest {
+    private final EntidadService service = new EntidadService(mock(EntidadRepository.class));
 
     @Test
     void danioDisminuyeConDistanciaIncluyendoElBordeDelRadio() {
@@ -21,10 +27,10 @@ class ExplosionTest {
         Cerdo cerdo = new Cerdo(10, 1, 1);
         Cerdo fragil = new Cerdo(2, 0, 0);
         Cerdo desaparecido = new Cerdo();
-        desaparecido.desaparecer();
+        service.recibirDanio(desaparecido, 10);
         Creeper otroCreeper = new Creeper();
 
-        var resultado = creeper.detonarSobre(List.of(creeper, centro, aUnBloque, aDosBloques,
+        var resultado = service.detonarSobre(creeper, List.of(creeper, centro, aUnBloque, aDosBloques,
                 enBorde, fuera, cerdo, fragil, desaparecido, otroCreeper));
 
         assertThat(resultado.afectados()).hasSize(6);
@@ -46,10 +52,10 @@ class ExplosionTest {
     @Test
     void noPuedeVolverAExplotarNiDaniarOtroObjetivo() {
         Creeper creeper = new Creeper();
-        creeper.detonarSobre(List.of());
+        service.detonarSobre(creeper, List.of());
         Zombie zombie = new Zombie();
 
-        assertThatThrownBy(() -> creeper.detonarSobre(List.of(zombie)))
+        assertThatThrownBy(() -> service.detonarSobre(creeper, List.of(zombie)))
                 .isInstanceOf(EntidadDesaparecidaException.class);
         assertThat(zombie.estado().vida()).isEqualTo(20);
     }
@@ -59,7 +65,7 @@ class ExplosionTest {
         Creeper creeper = new Creeper(20, Integer.MIN_VALUE, Integer.MIN_VALUE);
         Zombie lejano = new Zombie(20, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
-        assertThat(creeper.detonarSobre(List.of(lejano)).afectados()).isEmpty();
+        assertThat(service.detonarSobre(creeper, List.of(lejano)).afectados()).isEmpty();
         assertThat(lejano.estado().vida()).isEqualTo(20);
     }
 }

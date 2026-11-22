@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import py.edu.uc.lp3.MnriTallerGit2026Application;
+import py.edu.uc.lp3.service.EntidadService;
 import py.edu.uc.lp3.domain.exception.EntidadDesaparecidaException;
 import py.edu.uc.lp3.domain.exception.ExplosionInvalidaException;
 import py.edu.uc.lp3.domain.exception.VidaInvalidaException;
@@ -28,6 +29,8 @@ class RomeroMarceloTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private EntidadService service;
 
     @Test
     void losConstructoresSimplesCreanMobsConVidaCompletaEnElOrigen() {
@@ -52,13 +55,12 @@ class RomeroMarceloTest {
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 0, 21})
-    void losConstructoresRechazanVidaInicialInvalida(int vida) {
-        assertThatThrownBy(() -> new Creeper(vida, 0, 0))
-                .isInstanceOf(VidaInvalidaException.class)
-                .hasMessage("La vida inicial debe estar entre 1 y 20");
-        assertThatThrownBy(() -> new Zombie(vida, 0, 0))
-                .isInstanceOf(VidaInvalidaException.class)
-                .hasMessage("La vida inicial debe estar entre 1 y 20");
+    void elServicioRechazaVidaInicialInvalida(int vida) {
+        for (String tipo : new String[]{"Creeper", "Zombie"}) {
+            assertThatThrownBy(() -> service.crearMob(tipo, vida, 0, 0))
+                    .isInstanceOf(VidaInvalidaException.class)
+                    .hasMessage("La vida debe estar entre 1 y 20");
+        }
     }
 
     @ParameterizedTest
@@ -76,13 +78,13 @@ class RomeroMarceloTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"creeper", "zombie"})
-    void informaPorHttpLaVidaRechazadaPorElDominio(String tipo) throws Exception {
+    void informaPorHttpLaVidaRechazadaPorElServicio(String tipo) throws Exception {
         mockMvc.perform(get("/api/minecraft/mobs/" + tipo)
                 .param("vida", "21")
                 .param("x", "0")
                 .param("z", "0"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("La vida inicial debe estar entre 1 y 20"));
+                .andExpect(jsonPath("$.error").value("La vida debe estar entre 1 y 20"));
     }
 
     @Test
@@ -112,7 +114,7 @@ class RomeroMarceloTest {
                 .andExpect(jsonPath("$.entidad.posicionX").value(3))
                 .andExpect(jsonPath("$.entidad.posicionZ").value(2))
                 .andExpect(jsonPath("$.comportamiento")
-                        .value("El Creeper comenzo a cargar su explosion"));
+                        .value("El Creeper comenzó a cargar su explosión"));
     }
 
     @Test
@@ -125,7 +127,7 @@ class RomeroMarceloTest {
                 .andExpect(jsonPath("$.entidad.posicionX").value(1))
                 .andExpect(jsonPath("$.entidad.posicionZ").value(-2))
                 .andExpect(jsonPath("$.comportamiento")
-                        .value("El Zombie ataco cuerpo a cuerpo al jugador"));
+                        .value("El Zombie atacó cuerpo a cuerpo al jugador"));
     }
 
     @Test
@@ -141,7 +143,7 @@ class RomeroMarceloTest {
     void recibirDanioNuncaDejaLaVidaNegativa() {
         Creeper creeper = new Creeper();
 
-        creeper.recibirDanio(30);
+        service.recibirDanio(creeper, 30);
 
         assertThat(creeper.estado().vida()).isZero();
         assertThat(creeper.estaViva()).isFalse();
@@ -151,37 +153,37 @@ class RomeroMarceloTest {
     void rechazaDanioQueNoSeaPositivo() {
         Creeper creeper = new Creeper();
 
-        assertThatThrownBy(() -> creeper.recibirDanio(0))
+        assertThatThrownBy(() -> service.recibirDanio(creeper, 0))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("El danio debe ser positivo");
+                .hasMessage("El daño debe ser positivo");
         assertThat(creeper.estado().vida()).isEqualTo(20);
     }
 
     @Test
-    void aplicaLaReglaDeMovimientoHeredadaDelMob() {
+    void limitaElDesplazamientoDeUnMob() {
         Creeper creeper = new Creeper();
 
-        creeper.mover(3, 4);
+        service.mover(creeper, 3, 4);
 
         assertThat(creeper.estado().posicionX()).isEqualTo(3);
         assertThat(creeper.estado().posicionZ()).isEqualTo(4);
-        assertThatThrownBy(() -> creeper.mover(8, 1))
+        assertThatThrownBy(() -> service.mover(creeper, 8, 1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Un mob no puede desplazarse mas de 8 bloques");
+                .hasMessage("Un mob no puede desplazarse más de 8 bloques");
     }
 
     @Test
     void soloExplotaDespuesDeCargarYLuegoDesaparece() {
         Creeper creeper = new Creeper();
 
-        assertThatThrownBy(creeper::explotar)
+        assertThatThrownBy(() -> service.consumir(creeper))
                 .isInstanceOf(ExplosionInvalidaException.class)
                 .hasMessage("El Creeper debe cargar antes de explotar");
 
-        creeper.atacar();
-        String resultado = creeper.explotar();
+        service.atacar(creeper);
+        String resultado = service.consumir(creeper);
 
-        assertThat(resultado).isEqualTo("El Creeper exploto y desaparecio");
+        assertThat(resultado).isEqualTo("El Creeper explotó y desapareció");
         assertThat(creeper.estaViva()).isFalse();
         assertThat(creeper.estaCargado()).isFalse();
     }
@@ -189,9 +191,9 @@ class RomeroMarceloTest {
     @Test
     void cancelaLaCargaCuandoElDanioLoHaceDesaparecer() {
         Creeper creeper = new Creeper();
-        creeper.atacar();
+        service.atacar(creeper);
 
-        creeper.recibirDanio(20);
+        service.recibirDanio(creeper, 20);
 
         assertThat(creeper.estaViva()).isFalse();
         assertThat(creeper.estaCargado()).isFalse();
@@ -201,7 +203,7 @@ class RomeroMarceloTest {
     @CsvSource({"8, 0, 12", "8, 3, 15", "8, 8, 20", "8, 10, 20", "30, 2, 0"})
     void laProteccionReduceElDanioSinCurarNiDejarVidaNegativa(int danio, int proteccion, int vidaEsperada) {
         for (Entidad entidad : new Entidad[] {new Creeper(), new Zombie()}) {
-            entidad.recibirDanio(danio, proteccion);
+            service.recibirDanio(entidad, danio, proteccion);
             assertThat(entidad.estado().vida()).isEqualTo(vidaEsperada);
         }
     }
@@ -209,22 +211,22 @@ class RomeroMarceloTest {
     @Test
     void rechazaArgumentosInvalidosDeLaSobrecargaSinCambiarElEstado() {
         Creeper creeper = new Creeper();
-        assertThatThrownBy(() -> creeper.recibirDanio(0, 3))
+        assertThatThrownBy(() -> service.recibirDanio(creeper, 0, 3))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> creeper.recibirDanio(8, -1))
+        assertThatThrownBy(() -> service.recibirDanio(creeper, 8, -1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("La proteccion no puede ser negativa");
+                .hasMessage("La protección no puede ser negativa");
         assertThat(creeper.estado().vida()).isEqualTo(20);
     }
 
     @Test
     void elDanioConProteccionMantieneLaReglaDeDesaparicion() {
         Creeper creeper = new Creeper();
-        creeper.atacar();
-        creeper.recibirDanio(30, 5);
+        service.atacar(creeper);
+        service.recibirDanio(creeper, 30, 5);
         assertThat(creeper.estaViva()).isFalse();
         assertThat(creeper.estaCargado()).isFalse();
-        assertThatThrownBy(() -> creeper.recibirDanio(1, 10))
+        assertThatThrownBy(() -> service.recibirDanio(creeper, 1, 10))
                 .isInstanceOf(EntidadDesaparecidaException.class);
     }
 
@@ -249,7 +251,7 @@ class RomeroMarceloTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{\"cantidad\":8}"))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.error").value("La proteccion no puede ser negativa"));
+                    .andExpect(jsonPath("$.error").value("La protección no puede ser negativa"));
         } finally {
             mockMvc.perform(post("/api/minecraft/creeper/reiniciar"))
                     .andExpect(status().isOk());

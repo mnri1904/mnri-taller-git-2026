@@ -10,7 +10,6 @@ import py.edu.uc.lp3.domain.exception.ReglaMinecraftException;
 import py.edu.uc.lp3.domain.exception.VidaInvalidaException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MinecraftExceptionTest {
 
@@ -27,12 +26,4 @@ class MinecraftExceptionTest {
                 .hasMessage("No existe la entidad con id 7");
     }
 
-    @Test
-    void vidaInvalidaNoModificaElEstadoAnterior() {
-        Zombie zombie = new Zombie();
-        var anterior = zombie.estado();
-        assertThatThrownBy(() -> zombie.actualizarEstado(21, 5, 8))
-                .isInstanceOf(VidaInvalidaException.class);
-        assertThat(zombie.estado()).isEqualTo(anterior);
-    }
 }

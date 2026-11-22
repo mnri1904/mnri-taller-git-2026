@@ -15,21 +15,28 @@ import org.springframework.web.bind.annotation.RestController;
 import py.edu.uc.lp3.domain.Cerdo;
 import py.edu.uc.lp3.domain.Creeper;
 import py.edu.uc.lp3.domain.PosicionUI;
-import py.edu.uc.lp3.domain.UICapable;
+import py.edu.uc.lp3.domain.Entidad;
+import py.edu.uc.lp3.service.EntidadService;
 import py.edu.uc.lp3.domain.Zombie;
 
 @RestController
 @RequestMapping("/api/minecraft/ui")
 public class UIController {
 
-    @GetMapping(value = "/{tipo}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public RespuestaUI obtenerUI(@PathVariable String tipo) {
-        UICapable dibujable = crearDibujable(tipo.toLowerCase(Locale.ROOT));
-        return new RespuestaUI(dibujable.imagen(), dibujable.posicion(),
-                dibujable.sonido(), dibujable.velocidad());
+    private final EntidadService service;
+
+    public UIController(EntidadService service) {
+        this.service = service;
     }
 
-    private UICapable crearDibujable(String tipo) {
+    @GetMapping(value = "/{tipo}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public RespuestaUI obtenerUI(@PathVariable String tipo) {
+        Entidad dibujable = crearDibujable(tipo.toLowerCase(Locale.ROOT));
+        return new RespuestaUI(dibujable.imagen(), dibujable.posicion(),
+                service.sonido(dibujable), dibujable.velocidad());
+    }
+
+    private Entidad crearDibujable(String tipo) {
         return switch (tipo) {
             case "creeper" -> new Creeper();
             case "zombie" -> new Zombie();

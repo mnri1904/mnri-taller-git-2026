@@ -55,7 +55,7 @@ class EntidadControllerTest {
         String ubicacion = URL + "/" + id;
         assertThat(resultado.getResponse().getHeader("Location")).isEqualTo(ubicacion);
 
-        // Se consulta fuera de la transaccion del POST: JPA debe reconstruir el subtipo desde H2.
+        // Se consulta fuera de la transacción del POST: JPA debe reconstruir el subtipo desde H2.
         assertThat(repository.findById(id).orElseThrow().tipo()).isEqualTo(tipo);
         mockMvc.perform(get(ubicacion))
                 .andExpect(status().isOk())
@@ -187,7 +187,7 @@ class EntidadControllerTest {
         mockMvc.perform(post(URL + "/" + creeperId + "/explosion"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.codigo").value("ENTIDAD_DESAPARECIDA"))
-                .andExpect(jsonPath("$.error").value("La entidad ya desaparecio"));
+                .andExpect(jsonPath("$.error").value("La entidad ya desapareció"));
         assertThat(repository.findById(zombieId).orElseThrow().estado().vida()).isEqualTo(11);
     }
 
@@ -197,10 +197,44 @@ class EntidadControllerTest {
         mockMvc.perform(post(URL + "/" + zombieId + "/explosion"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.codigo").value("EXPLOSION_INVALIDA"))
-                .andExpect(jsonPath("$.error").value("Solo un Creeper puede provocar una explosion"));
+                .andExpect(jsonPath("$.error").value("Solo un Creeper puede provocar una explosión"));
         mockMvc.perform(post(URL + "/999999/explosion"))
                 .andExpect(status().isNotFound());
         assertThat(repository.findById(zombieId).orElseThrow().estado().vida()).isEqualTo(20);
+    }
+
+    @Test
+    void putConVidaExcesivaNoMueveAlCerdo() throws Exception {
+        String cerdo = URL + "/" + crearEntidad("Cerdo", 10, 7, 5);
+        mockMvc.perform(put(cerdo).contentType(MediaType.APPLICATION_JSON)
+                        .content(solicitud("Cerdo", 11, 8, 9)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value("VIDA_INVALIDA"));
+        mockMvc.perform(get(cerdo)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.vida").value(10))
+                .andExpect(jsonPath("$.posicionX").value(7))
+                .andExpect(jsonPath("$.posicionZ").value(5));
+    }
+
+    @Test
+    void putNoReviveAlCreeperNiPermiteUnaSegundaExplosion() throws Exception {
+        String creeper = URL + "/" + crearEntidad("Creeper", 20, 5, 5);
+        String zombie = URL + "/" + crearEntidad("Zombie", 20, 6, 5);
+        String cerdo = URL + "/" + crearEntidad("Cerdo", 10, 7, 5);
+
+        mockMvc.perform(post(creeper + "/explosion")).andExpect(status().isOk());
+        mockMvc.perform(put(creeper).contentType(MediaType.APPLICATION_JSON)
+                        .content(solicitud("Creeper", 20, 8, 9)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value("ENTIDAD_DESAPARECIDA"));
+        mockMvc.perform(get(creeper)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.vida").value(0))
+                .andExpect(jsonPath("$.posicionX").value(5))
+                .andExpect(jsonPath("$.posicionZ").value(5));
+        mockMvc.perform(post(creeper + "/explosion")).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value("ENTIDAD_DESAPARECIDA"));
+        mockMvc.perform(get(zombie)).andExpect(status().isOk()).andExpect(jsonPath("$.vida").value(11));
+        mockMvc.perform(get(cerdo)).andExpect(status().isOk()).andExpect(jsonPath("$.vida").value(4));
     }
 
     private long crearEntidad(String tipo, int vida, int x, int z) throws Exception {

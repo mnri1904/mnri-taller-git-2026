@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("Zombie")
 public class Zombie extends Mob implements Sonoro {
 
-    private static final int VIDA_MAXIMA = 20;
+    public static final int VIDA_MAXIMA = 20;
 
     public Zombie() {
         this(VIDA_MAXIMA, 0, 0);
@@ -24,13 +24,11 @@ public class Zombie extends Mob implements Sonoro {
 
     @Override
     public String atacar() {
-        exigirActiva();
-        return "El Zombie ataco cuerpo a cuerpo al jugador";
+        return "El Zombie atacó cuerpo a cuerpo al jugador";
     }
 
     @Override
     public String emitirSonido() {
-        exigirActiva();
         return "Grrr: el zombie gime buscando un objetivo.";
     }
 

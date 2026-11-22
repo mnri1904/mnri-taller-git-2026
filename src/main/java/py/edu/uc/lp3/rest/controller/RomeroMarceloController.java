@@ -14,12 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import py.edu.uc.lp3.domain.Creeper;
 import py.edu.uc.lp3.domain.EstadoEntidad;
+import py.edu.uc.lp3.service.EntidadService;
 
 @RestController
 @RequestMapping("/api/minecraft/creeper")
 public class RomeroMarceloController {
 
     private Creeper creeper = new Creeper();
+    private final EntidadService service;
+
+    public RomeroMarceloController(EntidadService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public synchronized EstadoCreeper consultar() {
@@ -28,7 +34,7 @@ public class RomeroMarceloController {
 
     @PostMapping("/mover")
     public synchronized EstadoCreeper mover(@RequestBody Movimiento movimiento) {
-        creeper.mover(movimiento.x(), movimiento.z());
+        service.mover(creeper, movimiento.x(), movimiento.z());
         return estadoActual();
     }
 
@@ -37,21 +43,21 @@ public class RomeroMarceloController {
             @RequestBody Danio danio,
             @RequestParam(required = false) Integer proteccion) {
         if (proteccion == null) {
-            creeper.recibirDanio(danio.cantidad());
+            service.recibirDanio(creeper, danio.cantidad());
         } else {
-            creeper.recibirDanio(danio.cantidad(), proteccion);
+            service.recibirDanio(creeper, danio.cantidad(), proteccion);
         }
         return estadoActual();
     }
 
     @PostMapping("/cargar")
     public synchronized Respuesta atacar() {
-        return new Respuesta(creeper.atacar(), estadoActual());
+        return new Respuesta(service.atacar(creeper), estadoActual());
     }
 
     @PostMapping("/explotar")
     public synchronized Respuesta explotar() {
-        return new Respuesta(creeper.explotar(), estadoActual());
+        return new Respuesta(service.consumir(creeper), estadoActual());
     }
 
     @PostMapping("/reiniciar")
