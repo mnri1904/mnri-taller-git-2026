@@ -275,6 +275,14 @@ los 20 pedidos de la colección por HTTP, con un servidor real y una base H2
 temporal en archivo. Se verificaron el reinicio, la explosión con vidas
 finales 0, 11 y 4 y el rechazo del PUT sin cambios de vida ni posición.
 
+### 21. POO-09: contrato OpenAPI de A1
+
+Marcelo acordó los roles de su entrega y preguntó qué es OpenAPI y si podía
+prepararlo antes de recibir las APIs de sus compañeros. Con OpenCode
+(`openai/gpt-6.2-astra`) se describieron el CRUD, los sonidos, la explosión
+y sus errores en `openapi.json` a partir de los controladores y del servicio.
+El README indica cómo leer el contrato e importarlo en Insomnia.
+
 ## Alcance del registro
 
 El proyecto anterior también se desarrolló con asistencia de IA, incluyendo

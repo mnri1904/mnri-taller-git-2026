@@ -16,6 +16,26 @@ Desde la raíz del proyecto, con JDK 21:
 Abrir <http://localhost:8080/>. La base de desarrollo se conserva entre reinicios;
 las pruebas usan otra base H2 en memoria. Ver también la [guía de ejecución](RUN.md).
 
+## POO-09: mapa del grupo para la entrega de Marcelo
+
+| Rol | Estudiante | URL base | URL del documento OpenAPI | Reglas de su API |
+| --- | --- | --- | --- | --- |
+| A1 | Marcelo Romero | `http://localhost:8080` (desarrollo local) | [OpenAPI 3](http://localhost:8080/openapi.json) | El daño de la explosión disminuye con la distancia. El Creeper desaparece al explotar y no puede volver a detonar. |
+| A2 | Elias Pont | Por confirmar | Por confirmar | Por confirmar con Elias. |
+| A3 | Alexandre Avalos | Por confirmar | Por confirmar | Por confirmar con Alexandre. |
+
+### Cómo consultar el OpenAPI de A1
+
+Con el servicio iniciado, abrir <http://localhost:8080/openapi.json> o importar
+esa URL en Insomnia (**Import → URL**). Spring Boot sirve el [documento JSON](src/main/resources/static/openapi.json)
+desde `src/main/resources/static/`. Si cambia una ruta, sus datos o sus reglas,
+hay que actualizar ese archivo. Leerlo no ejecuta ninguna jugada.
+
+Buscar `detonarCreeper`: allí figuran el método `POST`, la ruta, qué `id` usar
+y ejemplos de rechazo. Usar los ejemplos de `crearEntidad` para preparar la
+jugada. Desde otra computadora, usar la dirección accesible del servidor en vez
+de `localhost`, o clonar esta versión y arrancarla en esa computadora.
+
 ## Correcciones de POO-08
 
 La devolución corresponde al [commit evaluado](https://github.com/mnri1904/mnri-taller-git-2026/commit/9c4c35d8a3015a02791f4a5cc0f3a96fd6a0fbcc).
