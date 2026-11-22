@@ -20,16 +20,22 @@ las pruebas usan otra base H2 en memoria. Ver también la [guía de ejecución](
 
 | Rol | Estudiante | URL base | URL del documento OpenAPI | Reglas de su API |
 | --- | --- | --- | --- | --- |
-| A1 | Marcelo Romero | `http://localhost:8080` (desarrollo local) | [OpenAPI 3](http://localhost:8080/openapi.json) | El daño de la explosión disminuye con la distancia. El Creeper desaparece al explotar y no puede volver a detonar. |
+| A1 | Marcelo Romero | `http://localhost:8080` (desarrollo local) | [OpenAPI 3](http://localhost:8080/v3/api-docs) | El daño de la explosión disminuye con la distancia. El Creeper desaparece al explotar y no puede volver a detonar. |
 | A2 | Elias Pont | Por confirmar | Por confirmar | Por confirmar con Elias. |
 | A3 | Alexandre Avalos | Por confirmar | Por confirmar | Por confirmar con Alexandre. |
 
 ### Cómo consultar el OpenAPI de A1
 
-Con el servicio iniciado, abrir <http://localhost:8080/openapi.json> o importar
-esa URL en Insomnia (**Import → URL**). Spring Boot sirve el [documento JSON](src/main/resources/static/openapi.json)
-desde `src/main/resources/static/`. Si cambia una ruta, sus datos o sus reglas,
-hay que actualizar ese archivo. Leerlo no ejecuta ninguna jugada.
+1. Iniciar el servicio con `./mvnw spring-boot:run`.
+2. Para **leer** el contrato o ver ejemplos, abrir [Swagger UI](http://localhost:8080/swagger-ui/index.html).
+3. Para **importar** el mismo contrato en Insomnia, elegir **Import → URL** y usar
+   [el JSON](http://localhost:8080/v3/api-docs) o [el YAML](http://localhost:8080/v3/api-docs.yaml).
+
+Spring Boot 3.5.16 y `springdoc-openapi` 2.8.17 generan ambas representaciones
+a partir de las rutas, los tipos de datos y las anotaciones de `EntidadController`.
+La dirección anterior `/openapi.json` redirige al JSON generado. Abrir la documentación
+solo la lee; **Try it out → Execute** envía un pedido real. Los GET solo consultan;
+crear, actualizar, eliminar y detonar cambian H2 si el pedido tiene éxito.
 
 Buscar `detonarCreeper`: allí figuran el método `POST`, la ruta, qué `id` usar
 y ejemplos de rechazo. Usar los ejemplos de `crearEntidad` para preparar la

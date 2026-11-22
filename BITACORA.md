@@ -283,6 +283,20 @@ prepararlo antes de recibir las APIs de sus compañeros. Con OpenCode
 y sus errores en `openapi.json` a partir de los controladores y del servicio.
 El README indica cómo leer el contrato e importarlo en Insomnia.
 
+### 22. Publicación con Swagger UI — POO-09
+
+Marcelo comparó el contrato estático con el enfoque propuesto por Elias y pidió
+generarlo con `springdoc-openapi`. Con OpenCode (`openai/gpt-6.2-astra`) se
+incorporó la versión 2.8.17 a Spring Boot 3.5.16. Las anotaciones del controlador
+documentan el CRUD, las dos reglas, sus efectos en H2 y los errores. Swagger UI
+e Insomnia consumen el mismo contrato; `/openapi.json` conserva el enlace anterior.
+
+Verificación: 63 pruebas aprobadas con `./mvnw clean test`. Con el servidor
+iniciado mediante `./mvnw spring-boot:run` y H2 en memoria se consultaron Swagger UI,
+su configuración y los documentos JSON/YAML. Los ejemplos de creación y explosión
+dejaron vidas 0, 11 y 4; el Cerdo con vida 11, una segunda explosión y el intento
+de detonar un Zombie devolvieron 400. Inso CLI validó el JSON sin observaciones.
+
 ## Alcance del registro
 
 El proyecto anterior también se desarrolló con asistencia de IA, incluyendo
