@@ -1,5 +1,7 @@
 package py.edu.uc.lp3.service;
 
+import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import py.edu.uc.lp3.cliente.ClienteAlexandre;
@@ -38,6 +40,10 @@ public class EscenarioAldeaService {
         return jugadas.save(new JugadaAldea(creeperEliasId, ataque.zombieId(), resultadoAtaque.danio(),
                 resultadoAtaque.zombie().vida(), conDano));
     }
+
+    public List<JugadaAldea> listar() { return jugadas.findAll(); }
+
+    public Optional<JugadaAldea> buscar(long id) { return jugadas.findById(id); }
 
     public static class FalloCompanero extends RuntimeException {
         private final String origen;

@@ -46,10 +46,30 @@ ruta y el cuerpo lleva `zombieId` y `distancia`. Ambos IDs pertenecen a A2.
 Si Elías acepta, guarda el daño y devuelve las vidas; si rechaza por alcance,
 el cliente conserva el HTTP `422` y el cuerpo con `codigo: FUERA_DE_ALCANCE`.
 
+### Probar el escenario desde Swagger de Marcelo (8081)
+
+1. En `GET /api/minecraft/jugadas/aldea`, anotar la lista actual de jugadas de A1.
+2. En `POST /api/minecraft/jugadas/aldea`, probar primero el rechazo de A3 con este cuerpo:
+
+   ```json
+   {"potencia":0,"radio":3,"posicionCreeper":"0,64,0","tiempoCarga":3,"creeperEliasId":1,"zombieEliasId":2,"distancia":1}
+   ```
+
+   Con Alexandre en línea, **Server response** debe indicar `400`, `origen: "A3 Alexandre"`
+   y `codigo: "REGLA_DE_JUEGO"`. Repetir el GET y comparar con el paso 1.
+3. Para la jugada aceptada, usar potencia `10` y los IDs de un Creeper y un Zombie **vivos en Elías**,
+   con alcance suficiente para la distancia `1`. El `201` devuelve un ID nuevo **de Marcelo**;
+   consultar `GET /api/minecraft/jugadas/aldea/{id}` con ese ID.
+4. Para el rechazo de A2, usar otro Creeper vivo con alcance `3`, un Zombie vivo y distancia `4`.
+   Se espera `422`, `origen: "A2 Elías"` y `codigo: "FUERA_DE_ALCANCE"`. La lista de A1 no cambia;
+   consultar los aldeanos en A3 para ver el efecto que la onda ya produjo.
+
 ### Cómo consultar el OpenAPI de A1
 
 Los enlaces del mapa corresponden a una prueba conjunta en una misma computadora.
 Desde el repositorio de Elias (`15f97c7`), iniciar A2 con `./mvnw spring-boot:run`.
+Desde el repositorio de Alexandre (`51448de`), iniciar A3 con
+`./mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=8082`.
 En otra terminal, desde el repositorio de Marcelo:
 
 1. Iniciar A1 con `./mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=8081`.
@@ -58,7 +78,8 @@ En otra terminal, desde el repositorio de Marcelo:
    [el JSON](http://localhost:8081/v3/api-docs) o [el YAML](http://localhost:8081/v3/api-docs.yaml).
 
 Spring Boot 3.5.16 y `springdoc-openapi` 2.8.17 generan ambas representaciones
-a partir de las rutas, los tipos de datos y las anotaciones de `EntidadController`.
+a partir de las rutas, los tipos de datos y las anotaciones de `EntidadController`
+y `EscenarioAldeaController`.
 La dirección anterior `/openapi.json` redirige al JSON generado. Abrir la documentación
 solo la lee; **Try it out → Execute** envía un pedido real. Los GET solo consultan;
 crear, actualizar, eliminar y detonar cambian H2 si el pedido tiene éxito.

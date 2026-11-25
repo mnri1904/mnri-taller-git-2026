@@ -326,6 +326,16 @@ Se probaron las tres salidas con clientes simulados y H2 de pruebas, partiendo
 de una jugada anterior para verificar que los rechazos la conservan.
 `./mvnw test`: 70 pruebas aprobadas.
 
+### 26. Exponer el escenario como recurso HTTP de A1
+
+Marcelo pidió continuar con la ruta que une los dos clientes. Con OpenCode
+(`openai/gpt-6.2-astra`) se agregó `POST /api/minecraft/jugadas/aldea` y
+dos lecturas: la lista para comparar antes y después, y el detalle por ID.
+El rechazo de cada compañero conserva su estado HTTP, código y mensaje e
+identifica el origen. En el éxito, `Location` permite volver a leer la fila
+por HTTP. Pasaron 72 pruebas; las nuevas enviaron pedidos HTTP al servidor
+de Marcelo en un puerto de prueba, con clientes de compañeros simulados.
+
 ## Alcance del registro
 
 El proyecto anterior también se desarrolló con asistencia de IA, incluyendo
