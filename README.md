@@ -40,6 +40,12 @@ El cliente de A3 usa `ALEXANDRE_API_URL` (por defecto `http://localhost:8082`).
 Envía `POST /minecraft/simulaciones/explosion` una sola vez por invocación.
 No reintentar automáticamente un POST: el primer intento podría haber aplicado daño.
 
+El cliente de A2 usa `ELIAS_API_URL` (por defecto `http://localhost:8080`).
+Llama a `POST /api/hostiles/{id}/explosiones`: el ID del Creeper va en la
+ruta y el cuerpo lleva `zombieId` y `distancia`. Ambos IDs pertenecen a A2.
+Si Elías acepta, guarda el daño y devuelve las vidas; si rechaza por alcance,
+el cliente conserva el HTTP `422` y el cuerpo con `codigo: FUERA_DE_ALCANCE`.
+
 ### Cómo consultar el OpenAPI de A1
 
 Los enlaces del mapa corresponden a una prueba conjunta en una misma computadora.

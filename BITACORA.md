@@ -308,6 +308,15 @@ respuestas HTTP simuladas verifican el envío y la lectura del resultado de
 Pedro (20 → 14), y la conservación del error `400` con su cuerpo. Resultado
 del conjunto: 65 pruebas aprobadas con `./mvnw test`.
 
+### 24. Cliente de Elías — 25 de noviembre de 2026
+
+Marcelo pidió avanzar paso a paso después de confirmar en el enunciado que
+el orden de consulta se puede elegir y justificar. Con OpenCode
+(`openai/gpt-6.2-astra`) se agregó el cliente de A2 según la operación ya
+probada en Swagger. Dos pruebas con servidor simulado comprueban dónde se
+envía cada ID, la lectura de las vidas y el rechazo `422 / FUERA_DE_ALCANCE`.
+Pasaron las 67 pruebas; no se detonaron entidades en el servicio de Elías.
+
 ## Alcance del registro
 
 El proyecto anterior también se desarrolló con asistencia de IA, incluyendo
