@@ -297,6 +297,17 @@ su configuración y los documentos JSON/YAML. Los ejemplos de creación y explos
 dejaron vidas 0, 11 y 4; el Cerdo con vida 11, una segunda explosión y el intento
 de detonar un Zombie devolvieron 400. Inso CLI validó el JSON sin observaciones.
 
+### 23. Pruebas con los compañeros y primer cliente HTTP — 25 de noviembre de 2026
+
+Marcelo probó en Swagger los rechazos por distancia (A2) y potencia (A3),
+los casos aceptados y las lecturas posteriores. Propuso que los aldeanos
+puedan recibir daño aunque el Zombie esté fuera de alcance. Con OpenCode
+(`openai/gpt-6.2-astra`) se documentó por qué consultar A3 antes que A2 y
+se implementó el cliente de Alexandre usando su OpenAPI. Dos pruebas con
+respuestas HTTP simuladas verifican el envío y la lectura del resultado de
+Pedro (20 → 14), y la conservación del error `400` con su cuerpo. Resultado
+del conjunto: 65 pruebas aprobadas con `./mvnw test`.
+
 ## Alcance del registro
 
 El proyecto anterior también se desarrolló con asistencia de IA, incluyendo

@@ -20,16 +20,36 @@ las pruebas usan otra base H2 en memoria. Ver también la [guía de ejecución](
 
 | Rol | Estudiante | URL base | URL del documento OpenAPI | Reglas de su API |
 | --- | --- | --- | --- | --- |
-| A1 | Marcelo Romero | `http://localhost:8080` (desarrollo local) | [OpenAPI 3](http://localhost:8080/v3/api-docs) | El daño de la explosión disminuye con la distancia. El Creeper desaparece al explotar y no puede volver a detonar. |
-| A2 | Elias Pont | Por confirmar | Por confirmar | Por confirmar con Elias. |
-| A3 | Alexandre Avalos | Por confirmar | Por confirmar | Por confirmar con Alexandre. |
+| A1 | [Marcelo Romero](https://github.com/mnri1904/mnri-taller-git-2026/commit/6ccc6ea06c82cc5fb684b8d299ec82cc55e0721d) | `http://localhost:8081` | [OpenAPI de Marcelo](http://localhost:8081/v3/api-docs) | El daño de la explosión disminuye con la distancia. El Creeper desaparece al explotar y no puede volver a detonar. |
+| A2 | [Elias Pont](https://github.com/eliasleonardo11-dotcom/EP-taller-git-2026/commit/15f97c7) | `http://localhost:8080` | [OpenAPI de Elias](http://localhost:8080/v3/api-docs) | El Creeper y el Zombie deben estar vivos y la distancia debe estar entre cero y el alcance del Creeper; al detonar, el Creeper desaparece. El daño al Zombie es `max(1, 12 − 3 × distancia)`, limitado por su vida restante. |
+| A3 | [Alexandre Avalos](https://github.com/duw4ng/arar-taller-git-2026/commit/51448de94314e4fbc56f631baabc48d216b9934a) | `http://localhost:8082` | [OpenAPI de Alexandre](http://localhost:8082/v3/api-docs) | La onda pierde potencia con la distancia y no daña fuera del radio. El armero mitiga el daño según su nivel; el granjero que recibe daño y sobrevive queda en pánico. |
+
+### Escenario elegido: explosión cerca de una aldea
+
+Diseño de la jugada de Marcelo: primero resolver el efecto de la onda en los
+aldeanos (A3); después, la detonación contra el Zombie (A2). La onda puede
+alcanzar al armero aunque el Zombie esté fuera del alcance del Creeper en A2.
+
+| Resultado esperado | ¿Qué queda guardado? |
+| --- | --- |
+| A3 rechaza (por ejemplo, potencia 0) | A3 no cambia, A2 no se invoca y A1 no registra la jugada. |
+| A3 acepta y A2 rechaza (por ejemplo, distancia 4 con alcance 3) | A3 conserva el daño aplicado. A2 no cambia. A1 informa el rechazo de A2 sin registrar la jugada. |
+| Ambos aceptan | Cada compañero conserva su resultado. A1 debe registrar una jugada que se pueda consultar después. |
+
+El cliente de A3 usa `ALEXANDRE_API_URL` (por defecto `http://localhost:8082`).
+Envía `POST /minecraft/simulaciones/explosion` una sola vez por invocación.
+No reintentar automáticamente un POST: el primer intento podría haber aplicado daño.
 
 ### Cómo consultar el OpenAPI de A1
 
-1. Iniciar el servicio con `./mvnw spring-boot:run`.
-2. Para **leer** el contrato o ver ejemplos, abrir [Swagger UI](http://localhost:8080/swagger-ui/index.html).
+Los enlaces del mapa corresponden a una prueba conjunta en una misma computadora.
+Desde el repositorio de Elias (`15f97c7`), iniciar A2 con `./mvnw spring-boot:run`.
+En otra terminal, desde el repositorio de Marcelo:
+
+1. Iniciar A1 con `./mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=8081`.
+2. Para **leer** el contrato o ver ejemplos, abrir [Swagger UI de Marcelo](http://localhost:8081/swagger-ui/index.html).
 3. Para **importar** el mismo contrato en Insomnia, elegir **Import → URL** y usar
-   [el JSON](http://localhost:8080/v3/api-docs) o [el YAML](http://localhost:8080/v3/api-docs.yaml).
+   [el JSON](http://localhost:8081/v3/api-docs) o [el YAML](http://localhost:8081/v3/api-docs.yaml).
 
 Spring Boot 3.5.16 y `springdoc-openapi` 2.8.17 generan ambas representaciones
 a partir de las rutas, los tipos de datos y las anotaciones de `EntidadController`.
