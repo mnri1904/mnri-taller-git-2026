@@ -336,6 +336,33 @@ identifica el origen. En el éxito, `Location` permite volver a leer la fila
 por HTTP. Pasaron 72 pruebas; las nuevas enviaron pedidos HTTP al servidor
 de Marcelo en un puerto de prueba, con clientes de compañeros simulados.
 
+### 27. Verificación manual de los tres resultados desde Swagger de A1
+
+Marcelo ejecutó los pedidos en el puerto 8081 y contrastó las respuestas con
+lecturas independientes. Con OpenCode se distinguió el `Server response` real
+del `Example Value` de Swagger y se revisó qué quedó en cada base.
+
+| Pedido a A1 | Respuesta observada | Comprobación posterior |
+| --- | --- | --- |
+| Potencia `0` | `400`, origen `A3 Alexandre`, `REGLA_DE_JUEGO` | La lista de jugadas de Marcelo siguió en `[]`. |
+| Potencia `10`, Mecha (`3`) contra Sombra (`2`), distancia `4` | `422`, origen `A2 Elías`, `FUERA_DE_ALCANCE` | Pedro pasó de 14 a 8 en A3. En A2, Mecha y Sombra conservaron sus vidas (20 y 11). En A1 la lista siguió vacía. |
+| Mismo pedido, distancia `1` | `201`, `Location: /api/minecraft/jugadas/aldea/1` | El GET de A1 mostró una jugada: daño al Zombie 9, vida final 2, un aldeano con daño. En A3 Pedro quedó con 2; en A2 Mecha quedó con 0 y Sombra con 2. |
+
+### 28. Verificación en Insomnia con IDs de dos ejecuciones
+
+Marcelo configuró `a1`, `a2` y `a3` en Insomnia. Al cambiar el pedido de
+potencia cero de GET a POST, observó la diferencia entre listar la H2 (`200`)
+y recibir el rechazo de Alexandre (`400 / REGLA_DE_JUEGO`). El rechazo por
+distancia de Elías dio `422 / FUERA_DE_ALCANCE`. Tras cada rechazo, una
+consulta independiente mostró que la lista de jugadas no había cambiado.
+
+Con Centella (`4`) y Sombra (`2`), el éxito devolvió `201` y
+`Location: /api/minecraft/jugadas/aldea/2`: el daño aplicado fue 2 porque
+a Sombra solo le quedaban 2 puntos. Para repetir la prueba, Marcelo creó
+otro Creeper (`6`) y a Bruma (`5`), y usó variables para sus IDs. Predijo
+9 de daño, 11 de vida restante y tres jugadas. El GET posterior confirmó
+los tres valores: conservó las filas 1 y 2 y mostró la nueva jugada 3.
+
 ## Alcance del registro
 
 El proyecto anterior también se desarrolló con asistencia de IA, incluyendo

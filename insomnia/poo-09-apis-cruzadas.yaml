@@ -1,0 +1,231 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: POO-09 — APIs cruzadas de Marcelo
+meta:
+  id: wrk_214b2e28bd8c4001a382feee0b486145
+  created: 1794276985896
+  modified: 1794276985896
+  description: ""
+collection:
+  - name: POO-09 - APIS cruzadas
+    meta:
+      id: fld_a0347e6e9ffd4196affd3176c9e94a7f
+      created: 1795613988171
+      modified: 1795613988171
+      sortKey: -1795613988171
+      description: ""
+    children:
+      - url: "{{ _.a1 }}/v3/api-docs"
+        name: 01 — OpenAPI de Marcelo
+        meta:
+          id: req_185cb6e06b9f410b840e7f434703eb7e
+          created: 1795614006960
+          modified: 1795614302698
+          isPrivate: false
+          description: ""
+          sortKey: -1795614006960
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.a1 }}/api/minecraft/jugadas/aldea"
+        name: 02 — Listar jugadas de Marcelo
+        meta:
+          id: req_ac1715f925f6411783586d8e9340aa15
+          created: 1795614354409
+          modified: 1795614373642
+          isPrivate: false
+          description: ""
+          sortKey: -1795614354409
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.a1 }}/api/minecraft/jugadas/aldea"
+        name: 03 — Rechazo de A3 por potencia cero
+        meta:
+          id: req_8a068fb86e914b48b83b017a58f03c3b
+          created: 1795614423501
+          modified: 1795614529783
+          isPrivate: false
+          description: ""
+          sortKey: -1795614423501
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "potencia": 0,
+              "radio": 3,
+              "posicionCreeper": "0,64,0",
+              "tiempoCarga": 3,
+              "creeperEliasId": 3,
+              "zombieEliasId": 2,
+              "distancia": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.a2 }}/api/hostiles"
+        name: 04 — Crear Creeper de prueba en Elías
+        meta:
+          id: req_999bb6b24f9049d4aa3212b4ed753bf2
+          created: 1795614603342
+          modified: 1795614627364
+          isPrivate: false
+          description: ""
+          sortKey: -1795614603342
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "tipo": "CREEPER",
+              "nombre": "Centella",
+              "vida": 20,
+              "rangoAggro": 3
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.a1 }}/api/minecraft/jugadas/aldea"
+        name: 05 — Rechazo de A2 por distancia
+        meta:
+          id: req_fcc1b0eca3324efa826fc1f87be1f85e
+          created: 1795614675313
+          modified: 1795615403758
+          isPrivate: false
+          description: ""
+          sortKey: -1795614675313
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "potencia": 10,
+              "radio": 3,
+              "posicionCreeper": "0,64,0",
+              "tiempoCarga": 3,
+              "creeperEliasId": {{ _.creeperEliasId }},
+              "zombieEliasId": {{ _.zombieEliasId }},
+              "distancia": 4
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.a1 }}/api/minecraft/jugadas/aldea"
+        name: 06 — Jugada aceptada
+        meta:
+          id: req_055e52409fc2416fbeb88b36650cd220
+          created: 1795614825391
+          modified: 1795615409363
+          isPrivate: false
+          description: ""
+          sortKey: -1795614825391
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "potencia": 10,
+              "radio": 3,
+              "posicionCreeper": "0,64,0",
+              "tiempoCarga": 3,
+              "creeperEliasId": {{ _.creeperEliasId }},
+              "zombieEliasId": {{ _.zombieEliasId }},
+              "distancia": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.a2 }}/api/hostiles"
+        name: 04b — Crear Zombie de prueba en Elías
+        meta:
+          id: req_2e4b6014a69c455f85597825c005f1ea
+          created: 1795615171948
+          modified: 1795615186782
+          isPrivate: false
+          description: ""
+          sortKey: -1795614513421.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "tipo": "ZOMBIE",
+              "nombre": "Bruma",
+              "vida": 20,
+              "rangoAggro": 3
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1794277022117
+    modified: 1794277022117
+environments:
+  name: Base Environment
+  meta:
+    id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1794277021981
+    modified: 1795615368832
+    isPrivate: false
+  data:
+    a1: http://localhost:8081
+    a2: http://localhost:8080
+    a3: http://localhost:8082
+    zombieEliasId: "5"
+    creeperEliasId: "6"

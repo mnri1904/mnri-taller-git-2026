@@ -46,6 +46,22 @@ ruta y el cuerpo lleva `zombieId` y `distancia`. Ambos IDs pertenecen a A2.
 Si Elías acepta, guarda el daño y devuelve las vidas; si rechaza por alcance,
 el cliente conserva el HTTP `422` y el cuerpo con `codigo: FUERA_DE_ALCANCE`.
 
+### Repetir la prueba en Insomnia
+
+Con A2 y A3 en línea y después A1, importar [la colección de siete pedidos](insomnia/poo-09-apis-cruzadas.yaml)
+desde **Import → File**. Revisar `a1`, `a2` y `a3` en el entorno. Para repetir
+la prueba, usar los IDs devueltos en esa ejecución:
+
+1. Enviar `01` para leer el contrato de Marcelo y `02` para anotar las jugadas existentes.
+2. Enviar `03`: potencia cero → `400 / REGLA_DE_JUEGO` de A3. Repetir `02`: misma lista.
+3. Enviar `04` y `04b` para crear un Creeper y un Zombie en Elías. Copiar sus IDs
+   al entorno, en `creeperEliasId` y `zombieEliasId`, respectivamente.
+4. Enviar `05` (distancia 4) antes de `06`: `422 / FUERA_DE_ALCANCE` de A2.
+   Repetir `02`: misma lista. Alexandre ya resolvió la onda.
+5. Enviar `06` una vez (distancia 1): `201 Created`. Repetir `02`: una jugada más.
+   `Location` en el POST indica la ruta para consultar esa jugada por ID.
+   Para otra ejecución exitosa, volver a crear entidades vivas en el paso 3.
+
 ### Probar el escenario desde Swagger de Marcelo (8081)
 
 1. En `GET /api/minecraft/jugadas/aldea`, anotar la lista actual de jugadas de A1.
