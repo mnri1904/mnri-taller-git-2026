@@ -317,6 +317,15 @@ probada en Swagger. Dos pruebas con servidor simulado comprueban dónde se
 envía cada ID, la lectura de las vidas y el rechazo `422 / FUERA_DE_ALCANCE`.
 Pasaron las 67 pruebas; no se detonaron entidades en el servicio de Elías.
 
+### 25. Decisión de Marcelo: detener el escenario ante el rechazo de A3
+
+Marcelo predijo que, si Alexandre rechaza la onda, A1 no debe llamar a Elías
+ni insertar una jugada. Con OpenCode (`openai/gpt-6.2-astra`) se implementó
+`EscenarioAldeaService` con ese orden y una tabla local `jugadas_aldea`.
+Se probaron las tres salidas con clientes simulados y H2 de pruebas, partiendo
+de una jugada anterior para verificar que los rechazos la conservan.
+`./mvnw test`: 70 pruebas aprobadas.
+
 ## Alcance del registro
 
 El proyecto anterior también se desarrolló con asistencia de IA, incluyendo
